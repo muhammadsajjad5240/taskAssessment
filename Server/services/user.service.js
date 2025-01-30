@@ -1,3 +1,4 @@
+const bcrypt = require('bcryptjs')
 const { PrismaClient } = require('@prisma/client');
 const { StatusCodes } = require('http-status-codes');
 
@@ -21,12 +22,20 @@ const createUser = async (userBody) => {
   }
 
   // Create a new user
+  userBody.password = await hashPassword(userBody.password)
   const user = await prisma.user.create({
     data: userBody,
   });
 
   return user;
 };
+
+
+const hashPassword = async(password) => {
+    return await bcrypt.hash(password, 8);
+  
+};
+
 
 /**
  * Get user by email
@@ -56,9 +65,18 @@ const getUserById = async (userId) => {
 };
 
 
+/**
+ * Check if password matches the user's password
+ * @param {string} password
+ * @returns {Promise<boolean>}
+ */
+const isPasswordMatch = async  (user,password) => {
+  return await bcrypt.compare(password,user.password);
+};
 
 module.exports = {
   getUserById,
   createUser,
   getUserByEmail,
+  isPasswordMatch
 };

@@ -12,6 +12,8 @@ const ApiError = require('./utils/ApiError');
 const { jwtStrategy } = require('./config/passport');
 const { errorConverter, errorHandler } = require('./middlewares/error');
 
+
+
 const PORT = process.env.PORT || 5000;
 const dev = process.env.NODE_ENV !== 'production';
 
@@ -50,6 +52,10 @@ server.use(passport.initialize());
 server.use(passport.session());
 passport.use('jwt', jwtStrategy);
 
+
+server.get('/hello',(req,res,next)=>{
+  res.send('<p>Hello World</p>')
+})
 
   const getRoutes = require('./routes/index.js');
   server.use('/api', getRoutes);

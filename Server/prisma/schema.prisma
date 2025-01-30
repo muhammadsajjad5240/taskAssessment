@@ -1,0 +1,45 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+// Provide info about database and DB URL from .env
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+// User Model to store user information in database
+model User {
+  id       String  @id @default(uuid())
+  email    String  @unique
+  password String
+  tokens    Token[]
+}
+
+// Token Model to store user authorization tokens in database
+model Token {
+  id        String   @id @default(uuid())
+  token     String    @db.Text  // Use @db.Text to allow storing large text
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  type      TokenType
+  expires   DateTime
+  blacklisted Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+}
+
+// Enum token types
+enum TokenType {
+  refresh
+  access
+}
+
+// Task Model to store tasks information in database
+model Task {
+  id        String   @id @default(uuid())
+  taskName  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

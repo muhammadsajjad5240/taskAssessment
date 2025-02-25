@@ -9,7 +9,7 @@ const login = catchAsync(async (req, res) => {
   const { email, password } = req.body;
   console.log('req.body',req.body)
   const user = await authService.loginUserWithEmailAndPassword(email, password);
-  console.log('user',user)
+  console.log('user created',user)
 
   const tokens = await tokenService.generateAuthTokens(user);
   res.send({ user, tokens });

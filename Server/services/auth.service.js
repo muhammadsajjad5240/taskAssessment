@@ -14,8 +14,12 @@ const prisma = new PrismaClient();
  * @returns {Promise<User>}
  */
 const loginUserWithEmailAndPassword = async (email, password) => {
+  console.log('email, password',email, password)
   const user = await userService.getUserByEmail(email);
+  console.log('user',user)
+
   if (!user || !(await userService.isPasswordMatch(user, password))) {
+    console.log('if')
     throw new ApiError(StatusCodes.UNAUTHORIZED, 'Incorrect email or password');
   }
   return user;
